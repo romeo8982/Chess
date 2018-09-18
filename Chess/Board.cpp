@@ -45,34 +45,42 @@ void Board::AddPeace(Peace *peaces[])
 
 void Board::MovePeace(char start_coordinate_x, int start_coordinate_y, char end_coordinate_x, int end_coordinate_y, Peace *peaces[])
 {
+	string LegalCoordinats;
+	LegalCoordinats = end_coordinate_x;
+	LegalCoordinats += (end_coordinate_y + 48);
 	for (int i = 0; i < 32; i++)
 	{
 		if ((peaces[i]->GetCoordinateX() == start_coordinate_x) && (peaces[i]->GetCoordinateY() == start_coordinate_y))
 		{
-			for (int j = 0; j < 32; j++)
+			size_t FoundLegalCoordinate = peaces[i]->GetLegalCoordinats().find(LegalCoordinats);
+			if (FoundLegalCoordinate != string::npos)
 			{
-				if ((peaces[j]->GetCoordinateX() == end_coordinate_x) && (peaces[j]->GetCoordinateY() == end_coordinate_y))
+
+				for (int j = 0; j < 32; j++)
 				{
-					peaces[j]->PutCoordinateX('z');
-					peaces[j]->PutCoordinateY(i);
-					break;
+					if ((peaces[j]->GetCoordinateX() == end_coordinate_x) && (peaces[j]->GetCoordinateY() == end_coordinate_y))
+					{
+						peaces[j]->PutCoordinateX('z');
+						peaces[j]->PutCoordinateY(i);
+						break;
+					}
 				}
-			}
-			if (peaces[i]->GetColor() == 1)
-			{
-				console_color[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = 2;
-			}
-			tab[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = ' ';
+				if (peaces[i]->GetColor() == 1)
+				{
+					console_color[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = 2;
+				}
+				tab[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = ' ';
 
-			peaces[i]->PutCoordinateX(end_coordinate_x);
-			peaces[i]->PutCoordinateY(end_coordinate_y);
+				peaces[i]->PutCoordinateX(end_coordinate_x);
+				peaces[i]->PutCoordinateY(end_coordinate_y);
 
-			if (peaces[i]->GetColor() == 1)
-			{
-				console_color[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = 2;
+				if (peaces[i]->GetColor() == 1)
+				{
+					console_color[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = 2;
+				}
+				tab[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = peaces[i]->ShowPeace();
+				break;
 			}
-			tab[peaces[i]->GetCoordinateY() - 1][7 - peaces[i]->GetCoordinateXInt()] = peaces[i]->ShowPeace();
-			break;
 		}
 	}
 }
@@ -88,6 +96,7 @@ Board::Board()
 		}
 	}
 }
+
 Board::~Board()
 {
 }
